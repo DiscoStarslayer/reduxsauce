@@ -1,5 +1,17 @@
 import babel from 'rollup-plugin-babel'
-import ramda from 'rollup-plugin-ramda'
+
+const externalModules = ['ramda'];
+
+function isImportExternal(importStr) {
+  let external = false;
+
+  // Check for each of the external modules defined above
+  externalModules.forEach(externalModule => {
+    if (importStr.indexOf(externalModule) >= 0) external = true;
+  });
+
+  return external;
+}
 
 export default {
   entry: 'lib/reduxsauce.js',
@@ -11,9 +23,9 @@ export default {
         ['es2015', { modules: false }],
         'stage-0'
       ],
-      plugins: ['external-helpers'],
+      plugins: ['ramda'],
     }),
-    ramda(),
   ],
-  dest: 'dist/reduxsauce.js'
+  dest: 'dist/reduxsauce.js',
+  external: isImportExternal,
 }
